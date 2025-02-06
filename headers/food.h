@@ -9,7 +9,9 @@ typedef struct {
     int cycles;
 } food_t;
 
-void check_food(food_t* food, snake_t* snake);
+void update_food(food_t* food);
+
+void is_food_eaten(food_t* food, snake_t* snake);
 
 void kill_food(food_t* food);
 

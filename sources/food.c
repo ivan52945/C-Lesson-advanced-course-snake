@@ -3,7 +3,8 @@
 #include <ncurses.h>
 #include "config.h"
 #include <stdlib.h>
-void check_food(food_t* food, snake_t* snake)
+
+void update_food(food_t* food)
 {
     if(!food->cycles)
         return;
@@ -13,15 +14,19 @@ void check_food(food_t* food, snake_t* snake)
         return;
     }
 
-    point_t* head = get_head(snake);
-    if((head->x == food->x) && (head->y == food->y)){
-        snake->hungry = 0;
-        kill_food(food);
-        return;
-    }
-
     ++food->cycles;
     print_food(food, 1);
+}
+
+void is_food_eaten(food_t* food, snake_t* snake)
+{
+    point_t* head = get_head(snake);
+
+    if((head->x != food->x) || (head->y != food->y))
+        return;
+
+    snake->hungry = 0;
+    kill_food(food);
 }
 
 void place_food(food_t* food)

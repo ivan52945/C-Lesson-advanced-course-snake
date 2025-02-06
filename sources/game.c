@@ -26,7 +26,7 @@ static dir_t control_snake(char c, dir_t dir)
     return dir;
 }
 
-static void end(void)
+static void end(int score)
 {
     char *end_arr[] = {
             "########################",
@@ -48,6 +48,11 @@ static void end(void)
     getch();
 }
 
+void print_score(int score)
+{
+    mvprintw(HEIGHT + 4, 0, "Score: %d", score);
+}
+
 void start_game(void)
 {
     initscr();
@@ -65,6 +70,8 @@ void start_game(void)
     int cycle_without_food = 0;
 
     getch();
+    int score = 0;
+    print_score(score);
     timeout(0);
 
     while(1) {
@@ -82,7 +89,9 @@ void start_game(void)
 
         update_direction(snake, dir);
 
-        check_food(food, snake);
+        update_food(food);
+
+        is_food_eaten(food, snake);
 
         if (!food->cycles)
             ++cycle_without_food;
@@ -92,12 +101,18 @@ void start_game(void)
             place_food(food);
         }
 
-        move_or_grow_snake(snake);
+        if(!(snake->hungry)){
+            score += 100;
+            print_score(score);
+            grow_snake(snake);
+        }
+
+        move_snake(snake);
 
         check_death(snake);
 
         if (snake->stats == DEAD) {
-            end();
+            end(score);
             break;
         }
     }
