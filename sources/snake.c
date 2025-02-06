@@ -4,7 +4,7 @@
 
 static void print_snake(snake_t* snake, int print)
 {
-    for(int i = 0; i < snake->l; ++i){
+    for(int i = (snake->l - 1); i >= 0; --i){
         if(print)
             mvaddch(snake->body[i].y, snake->body[i].x, snake->body[i].p);
         else
@@ -22,11 +22,11 @@ snake_t* create_snake()
 
     for(int i = 0; i < snake->l; ++i){
         snake->body[i].x = WIDTH / 2;
-        snake->body[i].y = HEIGHT / 2 - i;
+        snake->body[i].y = HEIGHT / 2 + i;
         snake->body[i].p = '#';
     }
 
-    snake->body[snake->l - 1].p = '@';
+    snake->body[0].p = '@';
 
     print_snake(snake, 1);
 
@@ -66,34 +66,27 @@ void update_direction(snake_t* snake, dir_t new_dir)
         snake->dir = new_dir;
 }
 
-void move_or_grow_snake(snake_t* snake)
+void move_snake(snake_t* snake)
 {
     print_snake(snake, 0);
-    if(snake->hungry){
-        for (int i = 0; i < (snake->l - 1); ++i) {
-            snake->body[i].x = snake->body[i + 1].x;
-            snake->body[i].y = snake->body[i + 1].y;
-        }
-    }
-    else{
-        snake->hungry = 1;
-        snake->body[snake->l] = snake->body[snake->l - 1];
-        snake->body[snake->l - 1].p = '#';
-        ++snake->l;
+
+    for (int i = (snake->l - 1); i > 0 ; --i) {
+        snake->body[i].x = snake->body[i - 1].x;
+        snake->body[i].y = snake->body[i - 1].y;
     }
 
     switch (snake->dir) {
         case UP:
-            snake->body[snake->l - 1].y -= 1;
+            snake->body[0].y -= 1;
             break;
         case DOWN:
-            snake->body[snake->l - 1].y += 1;
+            snake->body[0].y += 1;
             break;
         case LEFT:
-            snake->body[snake->l - 1].x -= 1;
+            snake->body[0].x -= 1;
             break;
         case RIGHT:
-            snake->body[snake->l - 1].x += 1;
+            snake->body[0].x += 1;
             break;
         case WRONG:
             break;
@@ -102,7 +95,15 @@ void move_or_grow_snake(snake_t* snake)
     print_snake(snake, 1);
 }
 
+void grow_snake(snake_t* snake)
+{
+    snake->body[snake->l] = snake->body[(snake->l) - 1];
+    snake->l += 1;
+
+    snake->hungry = 1;
+}
+
 point_t* get_head(snake_t* snake)
 {
-    return (snake->body + (snake->l - 1));
+    return snake->body;
 }

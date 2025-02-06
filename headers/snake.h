@@ -37,7 +37,7 @@ void check_death(snake_t* snake);
 
 void update_direction(snake_t* snake, dir_t new_dir);
 
-void move_or_grow_snake(snake_t* snake);
+void move_snake(snake_t* snake);
 
 void grow_snake(snake_t* snake);
 
