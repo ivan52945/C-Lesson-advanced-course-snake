@@ -42,3 +42,5 @@ void move_snake(snake_t* snake);
 void grow_snake(snake_t* snake);
 
 point_t* get_head(snake_t* snake);
+
+int is_filled(snake_t* snake, int x, int y);

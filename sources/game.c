@@ -61,9 +61,9 @@ void start_game(void)
     curs_set(0);
     noecho();
 
-    food_t* food = create_food();
-    print_field(WIDTH, HEIGHT, '#');
     snake_t* snake = create_snake();
+    print_field(WIDTH, HEIGHT, '#');
+    food_t* food = create_food(snake);
 
     dir_t dir = snake->dir;
     clock_t prew_tick = clock();
@@ -98,7 +98,7 @@ void start_game(void)
 
         if (cycle_without_food > 10) {
             cycle_without_food = 0;
-            place_food(food);
+            place_food(food, snake);
         }
 
         if(!(snake->hungry)){
@@ -118,6 +118,8 @@ void start_game(void)
     }
 
     endwin();
-    free(snake);
     free(food);
+    free(snake);
+    food = NULL;
+    snake = NULL;
 }
