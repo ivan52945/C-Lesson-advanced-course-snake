@@ -2,6 +2,11 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+point_t* get_head(snake_t* snake)
+{
+    return snake->body;
+}
+
 static void print_snake(snake_t* snake, int print)
 {
     for(int i = (snake->l - 1); i >= 0; --i){
@@ -35,22 +40,21 @@ snake_t* create_snake()
 
 void check_death(snake_t* snake)
 {
-    int x_head = snake->body[snake->l - 1].x;
-    int y_head = snake->body[snake->l - 1].y;
+    point_t* head = get_head(snake);
 
-    if((x_head <= 0) || (x_head >= WIDTH)){
+    if((head->x <= 0) || (head->x >= WIDTH)){
         snake->stats = DEAD;
         return;
     }
-    if((y_head <= 0) || (y_head >= HEIGHT)){
+    if((head->y <= 0) || (head->y >= HEIGHT)){
         snake->stats = DEAD;
         return;
     }
 
-    for(int i = 0; i < snake->l - 3; ++i){
+    for(int i = 3; i < snake->l; ++i){
         int x_body = snake->body[i].x;
         int y_body = snake->body[i].y;
-        if(x_head == x_body && y_head == y_body){
+        if(head->x == x_body && head->y == y_body){
             snake->stats = DEAD;
             return;
         }
@@ -103,7 +107,11 @@ void grow_snake(snake_t* snake)
     snake->hungry = 1;
 }
 
-point_t* get_head(snake_t* snake)
+int is_filled(snake_t* snake, int x, int y)
 {
-    return snake->body;
+    for(int i = 0; i < snake->l; ++i)
+        if(x == snake->body[i].x && y == snake->body[i].y) {
+            return 1;
+        }
+    return 0;
 }

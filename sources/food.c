@@ -29,22 +29,24 @@ void is_food_eaten(food_t* food, snake_t* snake)
     kill_food(food);
 }
 
-void place_food(food_t* food)
+void place_food(food_t* food, snake_t* snake)
 {
     if(food == NULL)
         return;
 
     food->d = '&';
     food->cycles = 1;
-    food->y = (rand() % (HEIGHT - 2)) + 2;
-    food->x = (rand() % (WIDTH - 2)) + 2;
+    while(food->x != 0 && is_filled(snake, food->x, food->y)){
+        food->y = (rand() % (HEIGHT - 2)) + 2;
+        food->x = (rand() % (WIDTH - 2)) + 2;
+    }
     print_food(food, 1);
 }
 
-food_t* create_food()
+food_t* create_food(snake_t* snake)
 {
     food_t* food = malloc(sizeof(food_t));
-    place_food(food);
+    place_food(food, snake);
     return  food;
 }
 
