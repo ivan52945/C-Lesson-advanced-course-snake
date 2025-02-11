@@ -36,11 +36,10 @@ void place_food(food_t* food, snake_t* snake)
 
     food->d = '&';
     food->cycles = 1;
-    while(food->x != 0 && is_filled(snake, food->x, food->y)){
+    do {
         food->y = (rand() % (HEIGHT - 2)) + 2;
         food->x = (rand() % (WIDTH - 2)) + 2;
-    }
-    print_food(food, 1);
+    } while(is_filled(snake, food->x, food->y));
 }
 
 food_t* create_food(snake_t* snake)
